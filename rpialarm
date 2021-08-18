@@ -1,0 +1,3 @@
+#!/usr/bin/env python3
+from tango_rpialarm.rpialarm import start
+start()
