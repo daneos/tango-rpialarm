@@ -2,7 +2,7 @@ from re import match
 from time import sleep
 from threading import Thread
 
-from tango import AttrWriteType, DevState, DispLevel, AttributeProxy, DevFailed
+from tango import AttrWriteType, DevState, DispLevel, AttributeProxy
 from tango.server import run, Device, attribute, device_property, command
 
 from RPi import GPIO
@@ -152,7 +152,7 @@ class rpialarm(Device):
 			self._hw_thread.set(v)
 			self._start_hw_thread()
 		else:
-			raise DevFailed("Invalid value. Test \"ALARM\" or \"WARNING\".")
+			raise ValueError("Invalid value. Test \"ALARM\" or \"WARNING\".")
 
 	@command()
 	def reset(self):
@@ -182,7 +182,7 @@ class rpialarm(Device):
 		if v in ("LOW", "RANGE", "HIGH"):
 			self._mode = v
 		else:
-			raise DevFailed("Invalid value. Mode can be one of \"LOW\", \"RANGE\" or \"HIGH\".")
+			raise ValueError("Invalid value. Mode can be one of \"LOW\", \"RANGE\" or \"HIGH\".")
 
 	def get_low_alarm(self):
 		return self._low_alarm
@@ -217,7 +217,7 @@ class rpialarm(Device):
 			self._alarm_active = float(m.group(1))
 			self._alarm_sleep = float(m.group(2))
 		else:
-			raise DevFailed("Invalid format. Use \"<time_active>:<time_sleep>\".")
+			raise ValueError("Invalid format. Use \"<time_active>:<time_sleep>\".")
 
 	def get_warning_conf(self):
 		return "{act}:{sleep}".format(act=self._warning_active, sleep=self._warning_sleep)
@@ -228,7 +228,7 @@ class rpialarm(Device):
 			self._warning_active = float(m.group(1))
 			self._warning_sleep = float(m.group(2))
 		else:
-			raise DevFailed("Invalid format. Use \"<time_active>:<time_sleep>\".")
+			raise ValueError("Invalid format. Use \"<time_active>:<time_sleep>\".")
 
 	def _start_hw_thread(self):
 		if not self._hw_thread.isAlive():
